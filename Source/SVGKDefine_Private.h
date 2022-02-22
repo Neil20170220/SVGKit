@@ -8,11 +8,22 @@ SVGKDefine define some common macro used for private header.
 #define SVGKDefine_Private_h
 
 #import "SVGKDefine.h"
+
+#define SVGKIT_LOG_CONTEXT 556
+
+#if SVGKIT_MAC
+
+#define SVGKitLogError(frmt, ...)
+#define SVGKitLogWarn(frmt, ...)
+#define SVGKitLogInfo(frmt, ...)
+#define SVGKitLogDebug(frmt, ...)
+#define SVGKitLogVerbose(frmt, ...)
+
+#else
+
 @import CocoaLumberjack;
 
 // These macro is only used inside framework project, does not expose to public header and effect user's define
-
-#define SVGKIT_LOG_CONTEXT 556
 
 #define SVGKitLogError(frmt, ...)   LOG_MAYBE(NO,                LOG_LEVEL_DEF, DDLogFlagError,   SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 #define SVGKitLogWarn(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, DDLogFlagWarning, SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
@@ -24,6 +35,8 @@ SVGKDefine define some common macro used for private header.
 static const int ddLogLevel = DDLogLevelVerbose;
 #else
 static const int ddLogLevel = DDLogLevelWarning;
+#endif
+
 #endif
 
 #if SVGKIT_MAC
