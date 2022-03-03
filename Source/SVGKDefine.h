@@ -69,4 +69,6 @@
 #import <UIKit/UIKit.h>
 #endif
 
+extern bool enableSVGKitLog;
+
 #endif /* SVGKDefine_h */

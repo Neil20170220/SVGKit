@@ -14,11 +14,19 @@ SVGKDefine define some common macro used for private header.
 
 #define SVGKIT_LOG_CONTEXT 556
 
-#define SVGKitLogError(frmt, ...)   LOG_MAYBE(NO,                LOG_LEVEL_DEF, DDLogFlagError,   SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define SVGKitLogWarn(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, DDLogFlagWarning, SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define SVGKitLogInfo(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, DDLogFlagInfo,    SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define SVGKitLogDebug(frmt, ...)   LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, DDLogFlagDebug,   SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define SVGKitLogVerbose(frmt, ...) LOG_MAYBE(LOG_ASYNC_ENABLED, LOG_LEVEL_DEF, DDLogFlagVerbose, SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define SVGKitLogWithControl(async, level, frmt, ...)                                                                  \
+    do {                                                                                                               \
+        if (enableSVGKitLog) {                                                                                         \
+            LOG_MAYBE(async, LOG_LEVEL_DEF, level, SVGKIT_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__); \
+        }                                                                                                              \
+    } while (NO);
+
+
+#define SVGKitLogError(frmt, ...)   SVGKitLogWithControl(NO,                DDLogFlagError,     frmt, ##__VA_ARGS__)
+#define SVGKitLogWarn(frmt, ...)    SVGKitLogWithControl(LOG_ASYNC_ENABLED, DDLogFlagWarning,   frmt, ##__VA_ARGS__)
+#define SVGKitLogInfo(frmt, ...)    SVGKitLogWithControl(LOG_ASYNC_ENABLED, DDLogFlagInfo,      frmt, ##__VA_ARGS__)
+#define SVGKitLogDebug(frmt, ...)   SVGKitLogWithControl(LOG_ASYNC_ENABLED, DDLogFlagDebug,     frmt, ##__VA_ARGS__)
+#define SVGKitLogVerbose(frmt, ...) SVGKitLogWithControl(LOG_ASYNC_ENABLED, DDLogFlagVerbose,   frmt, ##__VA_ARGS__)
 
 #if DEBUG
 static const int ddLogLevel = DDLogLevelVerbose;
